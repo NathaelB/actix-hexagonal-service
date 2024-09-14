@@ -1,3 +1,2 @@
-pub mod article;
-pub mod repository;
-pub mod category;
+pub mod repositories;
+pub mod entities;

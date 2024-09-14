@@ -1,6 +1,6 @@
-use crate::application::article_service::ArticleService;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
+use crate::application::ports::article_service::ArticleService;
 
 #[derive(Serialize, Deserialize)]
 pub struct CreateArticleRequest {
@@ -10,7 +10,7 @@ pub struct CreateArticleRequest {
 
 #[post("/articles")]
 pub async fn create_article(
-    service: web::Data<ArticleService>,
+    service: web::Data<dyn ArticleService>,
     request: web::Json<CreateArticleRequest>,
 ) -> impl Responder {
     let article = service
@@ -25,7 +25,7 @@ pub async fn create_article(
 
 #[get("/articles/{article_id}")]
 pub async fn get_article(
-    service: web::Data<ArticleService>,
+    service: web::Data<dyn ArticleService>,
     article_id: web::Path<u32>,
 ) -> impl Responder {
     match service.get_article(article_id.into_inner()).await {
@@ -35,7 +35,7 @@ pub async fn get_article(
 }
 
 #[get("/articles")]
-pub async fn list_articles(service: web::Data<ArticleService>) -> impl Responder {
+pub async fn list_articles(service: web::Data<dyn ArticleService>) -> impl Responder {
     let articles = service.list_articles().await;
     HttpResponse::Ok().json(articles)
 }

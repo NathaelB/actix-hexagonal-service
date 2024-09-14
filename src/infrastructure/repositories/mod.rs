@@ -1,0 +1,2 @@
+pub mod in_memory_article_repository;
+pub mod in_memory_category_repository;
